@@ -2,6 +2,8 @@ import fs from "fs";
 
 const checkLogin = async (page, cookie, account) => {
   if (!cookie[0]) {
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
+
     await page.goto("https://hvdb.me/Account/Login", {
       waitUntil: "networkidle2",
     });
