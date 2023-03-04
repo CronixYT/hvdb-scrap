@@ -6,7 +6,7 @@ import { checkLogin } from "./utils/checkLogin.js";
 import { writeRjcode, findRjDetails } from "./method.js";
 
 const browserStart = async (account, { pageNum, pageSize }) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: true });
 
   const page = await browser.newPage();
   await page.setUserAgent(
@@ -14,12 +14,12 @@ const browserStart = async (account, { pageNum, pageSize }) => {
   );
 
   // Check cookie
-  await checkLogin(page, cookie, account);
-
-  // Reuse cookie
-  const cookiesString = await fs.readFileSync("./account/cookies.json");
-  const cookies = await JSON.parse(cookiesString);
-  await page.setCookie(...cookies);
+  await checkLogin(page, cookie, account).then(async () => {
+    // Reuse cookie
+    const cookiesString = await fs.readFileSync("./account/cookies.json");
+    const cookies = await JSON.parse(cookiesString);
+    await page.setCookie(...cookies);
+  });
 
   await page.goto(
     `https://hvdb.me/Dashboard/AllWorks/?page=${pageNum}&sort=downdatesort&pageSize=${pageSize}`,
@@ -45,6 +45,7 @@ const browserStart = async (account, { pageNum, pageSize }) => {
 
   //___________GET DATA EACH RJCODE____________//
   for (let rj of json) {
+    rj.rjCode = rj.rjCode.replace("★", "");
     await page.goto(`https://hvdb.me/Dashboard/WorkDetails/${rj.rjCode}`, {
       waitUntil: "networkidle2",
     });

@@ -1,6 +1,9 @@
 import fs from "fs";
 
 const checkLogin = async (page, cookie, account) => {
+  if (!account.username || !account.password) {
+    return;
+  }
   if (cookie === undefined || cookie.length == 0) {
     await page.goto("http://hvdb.me/Account/Login", {
       waitUntil: "networkidle2",
@@ -10,6 +13,8 @@ const checkLogin = async (page, cookie, account) => {
     await page.type("#Username", account.username);
     await page.type("#Password", account.password);
     await page.click(".submit.button");
+
+    await page.waitForNavigation();
 
     console.log("Successfuly Login!");
 

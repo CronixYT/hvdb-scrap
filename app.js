@@ -3,5 +3,6 @@ import account from "./account/account.json" assert { type: "json" };
 
 startHvdb(
   { username: account.username, password: account.password },
-  { pageNum: 1, pageSize: 15 }
+  // pageNum: Navigate page, pageSize: Show works per page
+  { pageNum: 1, pageSize: 10 }
 );
