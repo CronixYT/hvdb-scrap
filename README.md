@@ -6,7 +6,7 @@
 git clone https://github.com/CronixYT/hvdb-scrap.git
 cd to directory
 npm i
-npm start
+npm start // OR node app.js
 ```
 
 You can use your **own account** or **without** to get work details. (./account/account.json)
